@@ -32,7 +32,6 @@ public class Area {
         double x, y;
         x = (double) randInt(0, Area.width);
         y = (double) randInt(0, Area.height);
-        // System.out.println("x: " + x + "; y: " + y);
         blocks[i] = new AreaBlock(x, y, 10., 10.);
     }
 
@@ -97,7 +96,6 @@ public class Area {
             collision = blocks[i].detectCollision(block);
 
             if (collision) {
-                System.out.println("Collision at block " + i + " => " + blocks[i].getX() + " x " + blocks[i].getY());
                 break;
             }
         }

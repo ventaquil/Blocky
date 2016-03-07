@@ -95,11 +95,8 @@ public class PlayerBlock extends Block {
             ) {
                 jumpCounter += 0.1;
             } else {
-                // y += Math.floor(jumpModifier);
-                // y -= y % 10.;
                 Block collisionBlock = Area.getActive().getCollisionBlock(this);
 
-                // x = collisionBlock.getX() - getWidth();
                 if (collisionBlock != null) {
                     y = -(collisionBlock.getY() + collisionBlock.getHeight());
                 } else {
