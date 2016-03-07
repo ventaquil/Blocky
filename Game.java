@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public abstract class Game {
     private static List<Integer> activeKeys = new ArrayList<Integer>();
+    private static Integer score = 0;
 
     public static void removeActiveKeys()
     {
@@ -128,5 +129,17 @@ public abstract class Game {
         GameFrame.prepare();
 
         loop();
+    }
+
+    public static void updateScore(Integer newScore)
+    {
+        if (newScore > score) {
+            score = newScore;
+        }
+    }
+
+    public static Integer getScore()
+    {
+        return score;
     }
 }

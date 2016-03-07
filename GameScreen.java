@@ -1,8 +1,11 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.JPanel;
 
@@ -28,7 +31,7 @@ public class GameScreen extends JPanel {
     public static void prepare(Integer width, Integer height)
     {
         GameScreen.width = width;
-        GameScreen.height = height;
+        GameScreen.height = height + 23;
 
         screen = new GameScreen();
     }
@@ -40,20 +43,28 @@ public class GameScreen extends JPanel {
 
     private void printOverlay(Graphics2D g2D)
     {
-        g2D.translate(0, 0);
+        g2D.translate(0, -23);
 
         g2D.setColor(Color.white);
+        g2D.setFont(new Font("Arial", Font.PLAIN, 9));
 
-        // Show FPS
+        // Draw FPS
         if (fps != null) {
-            g2D.setFont(new Font("Arial", Font.PLAIN, 9));
-            g2D.drawString(GameScreen.fps + "FPS", 2, GameFrame.get().getContentHeight() - 2);
+            g2D.drawString(GameScreen.fps + "FPS", 2, getHeight() - 2);
         }
 
-        // Show Blocky (x,y)
-        g2D.setFont(new Font("Arial", Font.PLAIN, 9));
-        g2D.drawString("x: " + PlayerBlock.get().getX(), 2, 9);
-        g2D.drawString("y: " + PlayerBlock.get().getY(), 2, 19);
+        // Draw Blocky (x,y)
+        g2D.drawString("x: " + String.format("%.2f", PlayerBlock.get().getX()), 2, 9);
+        g2D.drawString("y: " + String.format("%.2f", PlayerBlock.get().getY()), 2, 19);
+
+        // Draw score
+        g2D.setFont(new Font("Arial", Font.BOLD, 14));
+        String score = "Your score: " + Game.getScore();
+        FontMetrics fm = g2D.getFontMetrics();
+        Rectangle2D r = fm.getStringBounds(score, g2D);
+        g2D.drawString(score, (getWidth() - (int) r.getWidth()) / 2, (int) r.getHeight());
+
+        g2D.draw(new Line2D.Double(0., 23., getWidth(), 23.));
     }
 
     public void paintComponent(Graphics g)
@@ -67,6 +78,7 @@ public class GameScreen extends JPanel {
         g2D.setColor(Color.black);
         g2D.fillRect(0, 0, getWidth(), getHeight());
 
+        g2D.translate(0, 23);
         Area activeArea = Area.getActive();
         if (activeArea != null) {
             activeArea.paint(g2D);

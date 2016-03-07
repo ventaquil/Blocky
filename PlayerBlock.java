@@ -155,6 +155,8 @@ public class PlayerBlock extends Block {
             }
         }
 
+        Game.updateScore(x.intValue());
+
         checkFall();
     }
 
