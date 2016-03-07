@@ -1,55 +1,20 @@
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-
-import javax.imageio.ImageIO;
-
-import java.io.File;
-import java.io.IOException;
-
-import java.lang.Math;
-
-import java.net.URL;
-
 public class Block {
-    private Double x = 0.;
-    private Double y = 0.;
-    private Boolean jumping = false;
-    private Double jumpCounter = null;
+    protected Double x, y, width, height;
 
-    public void paint(Graphics2D g2)
+    public Block(Double x, Double y, Double width, Double height)
     {
-        Color oldColor = g2.getColor();
+        this.x = x;
+        this.y = y;
 
-        if (jumping) {
-            jumping();
+        if (width > 0.) {
+            this.width = width;
         }
+        // @TODO exception
 
-        try {
-            BufferedImage image = ImageIO.read(new File("./resources/blocky.png"));
-            g2.drawImage(image.getScaledInstance(10, 10, Image.SCALE_DEFAULT), x.intValue(), (new Double(-y + 170.0)).intValue(), null);
-        } catch (IOException e) {
-            System.exit(-1);
+        if (height > 0.) {
+            this.height = height;
         }
-        // g2.setColor(Color.red);
-        // Rectangle2D quad = new Rectangle2D.Double(x, -y + 170, 10, 10);
-        // g2.fill(quad);
-
-        // g2.draw(quad);
-
-        g2.setColor(oldColor);
-    }
-
-    public void increaseX()
-    {
-        x++;
-    }
-
-    public void decreaseX()
-    {
-        x--;
+        // @TODO exception
     }
 
     public Double getX()
@@ -62,24 +27,39 @@ public class Block {
         return y;
     }
 
-    public void jump()
+    public Double getWidth()
     {
-        if (!jumping) {
-            jumping = true;
-            jumpCounter = 0.;
-        }
+        return width;
     }
 
-    private void jumping()
+    public Double getHeight()
     {
-        y = -Math.pow(jumpCounter - Math.sqrt(30), 2) + 30.1;
-
-        if (y > 0.) {
-            jumpCounter += 0.1;
-        } else {
-            y = 0.;
-            jumpCounter = null;
-            jumping = false;
-        }
+        return height;
     }
-};
+
+    public Boolean detectCollision(Block block)
+    {
+        return (
+            (
+                (
+                    (x <= block.getX()) &&
+                    (block.getX() < (x + width))
+                ) ||
+                (
+                    (x < (block.getX() + block.getWidth())) &&
+                    ((block.getX() + block.getWidth()) < (x + width))
+                )
+            ) &&
+            (
+                (
+                    (y < block.getY()) &&
+                    (block.getY() < (y + height))
+                ) ||
+                (
+                    (y < (block.getY() + block.getHeight())) &&
+                    ((block.getY() + block.getHeight()) < (y + height))
+                )
+            )
+        );
+    }
+}
