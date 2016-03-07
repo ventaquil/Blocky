@@ -36,6 +36,11 @@ public class PlayerBlock extends Block {
         block = new PlayerBlock(startX, startY, startWidth, startHeight);
     }
 
+    public static void restart()
+    {
+        start();
+    }
+
     public static PlayerBlock get()
     {
         return block;
@@ -57,7 +62,7 @@ public class PlayerBlock extends Block {
     {
         Color oldColor = g2D.getColor();
 
-        g2D.setColor(Color.red);
+        g2D.setColor(Color.RED);
         Rectangle2D quad = new Rectangle2D.Double(x, getY(), 10, 10);
         g2D.fill(quad);
 

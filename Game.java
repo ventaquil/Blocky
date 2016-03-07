@@ -37,33 +37,63 @@ public abstract class Game {
         activeKeys.remove(keyCode);
     }
 
+    private static void restart()
+    {
+        Area.load()
+            .setActive();
+
+        PlayerBlock.get().restart();
+
+        GameScreen.get().restart();
+
+        score = 0;
+    }
+
+    private static Boolean checkEnd()
+    {
+        return PlayerBlock.get().getY().intValue() >= GameFrame.get().getContentHeight();
+    }
+
     private static void executeActiveKeysActions()
     {
         for (int i = 0, j = activeKeys.size(); i < j; i++) {
             try {
                 switch (activeKeys.get(i)) {
+                    case 10: // ENTER
+                        if (checkEnd()) {
+                            restart();
+                        }
+                        break;
                     case 27: // ESC
                         System.exit(0);
                         break;
                     case 37: // Arrow Left
-                        PlayerBlock.get()
-                                   .decreaseX();
+                        if (!checkEnd()) {
+                            PlayerBlock.get()
+                                       .decreaseX();
+                        }
                         break;
                     case 38: // Arrow Up
-                        PlayerBlock.get()
-                                   .jump();
+                        if (!checkEnd()) {
+                            PlayerBlock.get()
+                                       .jump();
+                        }
                         break;
                     case 39: // Arrow Right
-                        if ((PlayerBlock.get().getX() - GameScreen.get().getOffset()) > 46) {
-                            GameScreen.get().increaseOffset();
-                        }
+                        if (!checkEnd()) {
+                            if ((PlayerBlock.get().getX() - GameScreen.get().getOffset()) > 46) {
+                                GameScreen.get().increaseOffset();
+                            }
 
-                        PlayerBlock.get()
-                                   .increaseX();
+                            PlayerBlock.get()
+                                       .increaseX();
+                        }
                         break;
                     case 40: // Arrow Down
-                        PlayerBlock.get()
-                                   .checkFall();
+                        if (!checkEnd()) {
+                            PlayerBlock.get()
+                                       .checkFall();
+                        }
                         break;
                 }
             } catch(IndexOutOfBoundsException e) {
@@ -72,18 +102,12 @@ public abstract class Game {
         }
     }
 
-    private static Boolean checkEnd()
-    {
-        return -PlayerBlock.get().getY().intValue() >= GameFrame.get().getContentHeight();
-    }
-
     private static void loop()
     {
         Long microtime, seconds = new Long(0), temp;
         Integer fps = 0;
-        Boolean end = false;
 
-        while (!end) {
+        while (true) {
             microtime = System.currentTimeMillis();
 
             try {
@@ -103,14 +127,17 @@ public abstract class Game {
                 // Execute all active keys actions
                 executeActiveKeysActions();
 
-                // Block move actions
-                PlayerBlock.get()
-                           .jumping();
-                PlayerBlock.get()
-                           .falling();
-
                 // Check end condiction
-                // end = checkEnd();
+                if (checkEnd()) {
+                    GameScreen.get()
+                              .setEndScreen();
+                } else {
+                    // Block move actions
+                    PlayerBlock.get()
+                               .jumping();
+                    PlayerBlock.get()
+                               .falling();
+                }
 
                 // Repaint screen
                 GameScreen.get()

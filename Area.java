@@ -73,7 +73,7 @@ public class Area {
         Rectangle2D quad;
         for (int i = 0, j = blocks.length; i < j; i++) {
             quad = new Rectangle2D.Double(blocks[i].getX(), blocks[i].getY(), blocks[i].getWidth(), blocks[i].getHeight());
-            g2D.setColor(Color.green);
+            g2D.setColor(Color.GREEN);
             g2D.fill(quad);
 
             g2D.setColor(new Color(0, 0, 0, 0));

@@ -13,13 +13,14 @@ public class GameScreen extends JPanel {
     private static Integer width, height, fps = null;
     private static GameScreen screen;
     private Double offset = 0.;
+    private Short screenNo = 1; // 1 - game; 2 - end
 
     private GameScreen()
     {
         width = GameScreen.width;
         height = GameScreen.height;
 
-        setBackground(Color.black);
+        setBackground(Color.BLACK);
 
         setMinimumSize(new Dimension(width, height));
 
@@ -45,7 +46,7 @@ public class GameScreen extends JPanel {
     {
         g2D.translate(offset, -23);
 
-        g2D.setColor(Color.white);
+        g2D.setColor(Color.WHITE);
         g2D.setFont(new Font("Arial", Font.PLAIN, 9));
 
         // Draw FPS
@@ -75,19 +76,44 @@ public class GameScreen extends JPanel {
         g2D.clearRect(0, 0, getWidth(), getHeight());
 
         // Fill Background
-        g2D.setColor(Color.black);
+        g2D.setColor(Color.BLACK);
         g2D.fillRect(0, 0, getWidth(), getHeight());
 
-        g2D.translate(-offset, 23);
-        Area activeArea = Area.getActive();
-        if (activeArea != null) {
-            activeArea.paint(g2D);
+        switch (screenNo) {
+            case 1:
+                g2D.translate(-offset, 23);
+                Area activeArea = Area.getActive();
+                if (activeArea != null) {
+                    activeArea.paint(g2D);
+                }
+
+                PlayerBlock.get()
+                           .paint(g2D);
+
+                printOverlay(g2D);
+                break;
+            case 2:
+                FontMetrics fm;
+                Rectangle2D r;
+                g2D.setColor(Color.WHITE);
+
+                String score = "Your final score " + Game.getScore();
+                g2D.setFont(new Font("Arial", Font.BOLD, 28));
+                fm = g2D.getFontMetrics();
+                r = fm.getStringBounds(score, g2D);
+                int topOffset = (getHeight() - (int) r.getHeight()) / 2;
+                g2D.drawString(score, (getWidth() - (int) r.getWidth()) / 2, topOffset);
+
+                g2D.setFont(new Font("Arial", Font.BOLD, 14));
+                fm = g2D.getFontMetrics();
+                r = fm.getStringBounds("Press [ENTER] to restart", g2D);
+                g2D.drawString("Press [ENTER] to restart", (getWidth() - (int) r.getWidth()) / 2, topOffset + 28);
+
+                fm = g2D.getFontMetrics();
+                r = fm.getStringBounds("or [ESC] to exit", g2D);
+                g2D.drawString("or [ESC] to exit", (getWidth() - (int) r.getWidth()) / 2, topOffset + 28 + 14);
+                break;
         }
-
-        PlayerBlock.get()
-                   .paint(g2D);
-
-        printOverlay(g2D);
 
         g2D.dispose();
     }
@@ -109,5 +135,16 @@ public class GameScreen extends JPanel {
     public void increaseOffset()
     {
         offset++;
+    }
+
+    public void setEndScreen()
+    {
+        screenNo = 2;
+    }
+
+    public void restart()
+    {
+        offset = 0.;
+        screenNo = 1;
     }
 }
