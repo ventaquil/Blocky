@@ -27,18 +27,31 @@ public class Area {
         return new Integer((new Random()).nextInt((max - min) + 1) + min);
     }
 
-    private void randBlock(Integer i)
+    private AreaBlock randBlock()
     {
-        double x, y;
-        x = (double) randInt(0, Area.width);
-        y = (double) randInt(0, Area.height);
-        blocks[i] = new AreaBlock(x, y, 10., 10.);
+        double x = (double) randInt(0, Area.width),
+               y = (double) randInt(0, Area.height);
+
+        return new AreaBlock(x, y, 10., 10.);
     }
 
     private void randArea(Integer elements)
     {
+        Double[] startValues = PlayerBlock.getStartValues();
+        Boolean collision;
+        
+        AreaBlock virtual = new AreaBlock(startValues[0], startValues[1], startValues[2], startValues[3]);
+
         for (int i = 0; i < elements; i++) {
-            randBlock(i);
+            do {
+                collision = false;
+
+                blocks[i] = randBlock();
+
+                for (int j = 0; (j < i) && !collision; j++) {
+                    collision = blocks[j].detectCollision(blocks[i]);
+                }
+            } while (virtual.detectCollision(blocks[i]) || collision);
         }
     }
 

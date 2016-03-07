@@ -182,4 +182,15 @@ public class PlayerBlock extends Block {
 
         checkFall();
     }
+
+    public static Double[] getStartValues()
+    {
+        Double[] startPoint = new Double[4];
+        startPoint[0] = startX;
+        startPoint[1] = startY;
+        startPoint[2] = startWidth;
+        startPoint[3] = startHeight;
+
+        return startPoint;
+    }
 }

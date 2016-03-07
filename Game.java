@@ -152,9 +152,11 @@ public abstract class Game {
     public static void run()
     {
         GameFrame.setAreaSize();
-        Area.load();
 
         PlayerBlock.setStart(0., 0., 10., 10.);
+
+        Area.load();
+
         PlayerBlock.start();
 
         GameFrame.prepare();
