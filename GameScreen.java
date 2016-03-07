@@ -137,7 +137,7 @@ public class GameScreen extends JPanel {
         offset++;
     }
 
-    public void setEndScreen()
+    public void showEndScreen()
     {
         screenNo = 2;
     }

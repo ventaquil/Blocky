@@ -95,6 +95,11 @@ public abstract class Game {
                                        .checkFall();
                         }
                         break;
+                    case 82: // r
+                        if (!checkEnd()) {
+                            restart();
+                        }
+                        break;
                 }
             } catch(IndexOutOfBoundsException e) {
                 activeKeys.remove(i);
@@ -130,7 +135,7 @@ public abstract class Game {
                 // Check end condiction
                 if (checkEnd()) {
                     GameScreen.get()
-                              .setEndScreen();
+                              .showEndScreen();
                 } else {
                     // Block move actions
                     PlayerBlock.get()
