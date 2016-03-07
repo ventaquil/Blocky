@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public abstract class Game {
     private static List<Integer> activeKeys = new ArrayList<Integer>();
     private static Integer score = 0;
+    private static Area[] areas;
+    private static Short areaPointer = 0;
 
     public static void removeActiveKeys()
     {
@@ -37,10 +39,20 @@ public abstract class Game {
         activeKeys.remove(keyCode);
     }
 
+    private static void generateAreas()
+    {
+        areas = new Area[3];
+        areaPointer = 1;
+
+        for (int i = 0; i < 3; i++) {
+            areas[i] = Area.load();
+        }
+        areas[0].setActive();
+    }
+
     private static void restart()
     {
-        Area.load()
-            .setActive();
+        generateAreas();
 
         PlayerBlock.get().restart();
 
@@ -160,7 +172,7 @@ public abstract class Game {
 
         PlayerBlock.setStart(0., 0., 10., 10.);
 
-        Area.load();
+        generateAreas();
 
         PlayerBlock.start();
 
