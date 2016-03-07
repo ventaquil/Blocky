@@ -165,7 +165,7 @@ public class PlayerBlock extends Block {
     public void decreaseX()
     {
         x--;
-        if (Area.getActive().check(this)) {
+        if (Area.getActive().check(this) || (x < GameScreen.get().getOffset())) {
             x++;
 
             Block collisionBlock = Area.getActive().getCollisionBlock(this);

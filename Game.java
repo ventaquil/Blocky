@@ -54,6 +54,10 @@ public abstract class Game {
                                    .jump();
                         break;
                     case 39: // Arrow Right
+                        if ((PlayerBlock.get().getX() - GameScreen.get().getOffset()) > 46) {
+                            GameScreen.get().increaseOffset();
+                        }
+
                         PlayerBlock.get()
                                    .increaseX();
                         break;
@@ -123,7 +127,7 @@ public abstract class Game {
         GameFrame.setAreaSize();
         Area.load();
 
-        PlayerBlock.setStart(10., -40., 10., 10.);
+        PlayerBlock.setStart(0., 0., 10., 10.);
         PlayerBlock.start();
 
         GameFrame.prepare();

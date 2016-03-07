@@ -43,7 +43,7 @@ public class GameScreen extends JPanel {
 
     private void printOverlay(Graphics2D g2D)
     {
-        g2D.translate(0, -23);
+        g2D.translate(offset, -23);
 
         g2D.setColor(Color.white);
         g2D.setFont(new Font("Arial", Font.PLAIN, 9));
@@ -78,7 +78,7 @@ public class GameScreen extends JPanel {
         g2D.setColor(Color.black);
         g2D.fillRect(0, 0, getWidth(), getHeight());
 
-        g2D.translate(0, 23);
+        g2D.translate(-offset, 23);
         Area activeArea = Area.getActive();
         if (activeArea != null) {
             activeArea.paint(g2D);

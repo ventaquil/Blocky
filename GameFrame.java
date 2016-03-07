@@ -98,7 +98,7 @@ public class GameFrame extends JFrame {
 
     public static void setAreaSize()
     {
-        Area.setSize(WIDTH, HEIGHT);
+        Area.setSize(WIDTH + 80, HEIGHT);
     }
 
     public static Integer getContentHeight()
