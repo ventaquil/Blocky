@@ -136,9 +136,11 @@ public class PlayerBlock extends Block {
     public void checkFall()
     {
         if (!jumping && !falling) {
+            y--;
             if (!Area.getActive().check(this)) {
                 fall();
             }
+            y++;
         }
     }
 

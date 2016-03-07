@@ -47,17 +47,17 @@ public class Block {
                 ) ||
                 (
                     (x < (block.getX() + block.getWidth())) &&
-                    ((block.getX() + block.getWidth()) < (x + width))
+                    ((block.getX() + block.getWidth()) <= (x + width))
                 )
             ) &&
             (
                 (
-                    (y < block.getY()) &&
+                    (y <= block.getY()) &&
                     (block.getY() < (y + height))
                 ) ||
                 (
                     (y < (block.getY() + block.getHeight())) &&
-                    ((block.getY() + block.getHeight()) < (y + height))
+                    ((block.getY() + block.getHeight()) <= (y + height))
                 )
             )
         );
