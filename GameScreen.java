@@ -134,7 +134,13 @@ public class GameScreen extends JPanel {
 
     public void increaseOffset()
     {
-        offset++;
+        Area.get()
+            .removeUseless((++offset).intValue());
+
+        if (offset % 40. == 0.) {
+            Area.get()
+                .generateNew(offset.intValue());
+        }
     }
 
     public void showEndScreen()
