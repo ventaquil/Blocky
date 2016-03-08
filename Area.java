@@ -7,7 +7,7 @@ import java.util.Random;
 public class Area {
     private static Integer width = 10,
                            height = 10;
-    private static Area active = null;
+    private static Area area = null;
     private AreaBlock[] blocks;
 
     public static void setSize(Integer width, Integer height)
@@ -63,17 +63,10 @@ public class Area {
         randArea(elements);
     }
 
-    public void setActive()
-    {
-        Area.active = this;
-    }
-
     public static Area load()
     {
-        Area area = new Area();
-
-        if (Area.active ==  null) {
-            area.setActive();
+        if (area ==  null) {
+            area = new Area();
         }
 
         return area;
@@ -96,9 +89,14 @@ public class Area {
         g2D.setColor(oldColor);
     }
 
-    public static Area getActive()
+    public static Area get()
     {
-        return Area.active;
+        return area;
+    }
+
+    public static void restart()
+    {
+        area = new Area();
     }
 
     public Boolean check(Block block)

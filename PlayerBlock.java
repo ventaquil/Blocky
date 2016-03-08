@@ -96,11 +96,11 @@ public class PlayerBlock extends Block {
             if (
                 (getY() > 0) &&
                 (jumpCounter < STARTFALLING) &&
-                !Area.getActive().check(this)
+                !Area.get().check(this)
             ) {
                 jumpCounter += 0.1;
             } else {
-                Block collisionBlock = Area.getActive().getCollisionBlock(this);
+                Block collisionBlock = Area.get().getCollisionBlock(this);
 
                 if (collisionBlock != null) {
                     y = -(collisionBlock.getY() + collisionBlock.getHeight());
@@ -123,10 +123,10 @@ public class PlayerBlock extends Block {
         if (falling) {
             jumpModifier = -Math.pow(jumpCounter, 2);
 
-            if (!Area.getActive().check(this)) {
+            if (!Area.get().check(this)) {
                 jumpCounter += 0.1;
             } else {
-                Block collisionBlock = Area.getActive().getCollisionBlock(this);
+                Block collisionBlock = Area.get().getCollisionBlock(this);
 
                 y = -(collisionBlock.getY() - getHeight());
 
@@ -142,7 +142,7 @@ public class PlayerBlock extends Block {
     {
         if (!jumping && !falling) {
             y--;
-            if (!Area.getActive().check(this)) {
+            if (!Area.get().check(this)) {
                 fall();
             }
             y++;
@@ -152,10 +152,10 @@ public class PlayerBlock extends Block {
     public void increaseX()
     {
         x++;
-        if (Area.getActive().check(this)) {
+        if (Area.get().check(this)) {
             x--;
 
-            Block collisionBlock = Area.getActive().getCollisionBlock(this);
+            Block collisionBlock = Area.get().getCollisionBlock(this);
 
             if (collisionBlock != null) {
                 x = collisionBlock.getX();
@@ -170,10 +170,10 @@ public class PlayerBlock extends Block {
     public void decreaseX()
     {
         x--;
-        if (Area.getActive().check(this) || (x < GameScreen.get().getOffset())) {
+        if (Area.get().check(this) || (x < GameScreen.get().getOffset())) {
             x++;
 
-            Block collisionBlock = Area.getActive().getCollisionBlock(this);
+            Block collisionBlock = Area.get().getCollisionBlock(this);
 
             if (collisionBlock != null) {
                 x = collisionBlock.getX() + collisionBlock.getWidth();

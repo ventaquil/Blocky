@@ -82,9 +82,9 @@ public class GameScreen extends JPanel {
         switch (screenNo) {
             case 1:
                 g2D.translate(-offset, 23);
-                Area activeArea = Area.getActive();
-                if (activeArea != null) {
-                    activeArea.paint(g2D);
+                Area area = Area.get();
+                if (area != null) {
+                    area.paint(g2D);
                 }
 
                 PlayerBlock.get()
