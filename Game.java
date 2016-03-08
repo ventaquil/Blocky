@@ -80,12 +80,12 @@ public abstract class Game {
                         break;
                     case 39: // Arrow Right
                         if (!checkEnd()) {
+                            PlayerBlock.get()
+                                       .increaseX();
+
                             if ((PlayerBlock.get().getX() - GameScreen.get().getOffset()) > 46) {
                                 GameScreen.get().increaseOffset();
                             }
-
-                            PlayerBlock.get()
-                                       .increaseX();
                         }
                         break;
                     case 40: // Arrow Down
