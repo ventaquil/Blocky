@@ -114,7 +114,7 @@ public abstract class Game {
                         break;
                 }
             } catch(IndexOutOfBoundsException e) {
-                activeKeys.remove(i);
+                
             }
         }
     }
