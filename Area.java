@@ -57,7 +57,7 @@ public class Area {
 
     private Area()
     {
-        Integer elements = randInt((int) (0.1 * Area.width), (int) (0.15 * Area.width)) + randInt((int) (0.1 * Area.height), (int) (0.15 * Area.height));
+        Integer elements = randInt((int) (0.08 * Area.width), (int) (0.1 * Area.width)) + randInt((int) (0.08 * Area.height), (int) (0.1 * Area.height));
         blocks = new AreaBlock[elements];
 
         randArea(elements);
