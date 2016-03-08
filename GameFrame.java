@@ -17,7 +17,7 @@ public class GameFrame extends JFrame {
     private void setIcon()
     {
         try{
-            setIconImage(ImageIO.read(GameFrame.class.getResourceAsStream("/resources/blocky.png")));
+            setIconImage(ImageIO.read(GameFrame.class.getResourceAsStream("/resources/PlayerBlock.png")));
         } catch(IOException e){
             System.exit(-1);
         }

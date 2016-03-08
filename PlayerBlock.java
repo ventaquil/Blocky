@@ -1,6 +1,13 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
+
+import java.io.File;
+import java.io.IOException;
 
 import java.lang.Math;
 
@@ -17,6 +24,7 @@ public class PlayerBlock extends Block {
                    jumpCounter = null;
     private Boolean jumping = false,
                     falling = false;
+    private BufferedImage image;
 
     public static void setStart(Double x, Double y, Double width, Double height)
     {
@@ -29,6 +37,12 @@ public class PlayerBlock extends Block {
     private PlayerBlock(Double x, Double y, Double width, Double height)
     {
         super(x, y, width, height);
+
+        try {
+            image = ImageIO.read(new File("./resources/PlayerBlock.png"));
+        } catch (IOException e) {
+            System.exit(-1);
+        }
     }
 
     public static void start()
@@ -60,16 +74,7 @@ public class PlayerBlock extends Block {
 
     public void paint(Graphics2D g2D)
     {
-        Color oldColor = g2D.getColor();
-
-        g2D.setColor(Color.RED);
-        Rectangle2D quad = new Rectangle2D.Double(x, getY(), 10, 10);
-        g2D.fill(quad);
-
-        g2D.setColor(new Color(0, 0, 0, 0));
-        g2D.draw(quad);
-
-        g2D.setColor(oldColor);
+        g2D.drawImage(image.getScaledInstance(10, 10, Image.SCALE_DEFAULT), getX().intValue(), getY().intValue(), null);
     }
 
     public void jump()
