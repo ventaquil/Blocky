@@ -74,11 +74,13 @@ public class Area {
     {
         offset -= 5;
 
-        for (int i = 0, j = blocks.size(); i < j; i++){
-            if (blocks.get(i).getX() < offset) {
-                blocks.remove(i);
+        try {
+            for (int i = 0, j = blocks.size(); i < j; i++){
+                if (blocks.get(i).getX() < offset) {
+                    blocks.remove(i);
+                }
             }
-        }
+        } catch (IndexOutOfBoundsException e) { }
 
         return this;
     }
@@ -87,14 +89,37 @@ public class Area {
     {
         Integer elements = randInt((int) (0.01 * Area.width), (int) (0.015 * Area.width)) + randInt((int) (0.01 * Area.height), (int) (0.015 * Area.height));
         double x, y;
- 
-        int size = blocks.size();
+        Boolean collision;
+        AreaBlock block = null;
 
         for (int i = 0; i < elements; i++) {
-            x = (double) randInt(-20, 20);
-            y = (double) randInt(0, Area.height);
+            do {
+                // Remove old element if exists
+                if (block != null) {
+                    blocks.remove(block);
+                }
 
-            blocks.add(new AreaBlock(x + offset + width, y, 10., 10.));
+                collision = false;
+                x = (double) randInt(-20, 20);
+                y = (double) randInt(0, Area.height);
+
+                block = new AreaBlock(x + offset + width, y, 10., 10.);
+                blocks.add(block);
+
+                // Find all conflicted blocks
+                for (int j = 0, k = blocks.indexOf(block); (j < k) && !collision; j++) {
+                    try {
+                        collision = blocks.get(j)
+                                          .detectCollision(block);
+                    } catch (IndexOutOfBoundsException e) {
+                        collision = false;
+                    }
+                }
+
+                if (!collision) {
+                    block = null;
+                }
+            } while (collision);
         }
 
         return this;
@@ -119,19 +144,12 @@ public class Area {
 
     public void paint(Graphics2D g2D)
     {
-        Color oldColor = g2D.getColor();
-
-        Rectangle2D quad;
-        for (int i = 0, j = blocks.size(); i < j; i++) {
-            quad = new Rectangle2D.Double(blocks.get(i).getX(), blocks.get(i).getY(), blocks.get(i).getWidth(), blocks.get(i).getHeight());
-            g2D.setColor(Color.GREEN);
-            g2D.fill(quad);
-
-            g2D.setColor(new Color(0, 0, 0, 0));
-            g2D.draw(quad);
-        }
-
-        g2D.setColor(oldColor);
+        try {
+            for (int i = 0, j = blocks.size(); i < j; i++) {
+                blocks.get(i)
+                      .paint(g2D);
+            }
+        } catch (IndexOutOfBoundsException e) { }
     }
 
     public static Area get()
@@ -152,24 +170,28 @@ public class Area {
     {
         Boolean collision = false;
 
-        for (int i = 0, j = blocks.size(); i < j; i++) {
-            collision = blocks.get(i).detectCollision(block);
+        try {
+            for (int i = 0, j = blocks.size(); i < j; i++) {
+                collision = blocks.get(i).detectCollision(block);
 
-            if (collision) {
-                break;
+                if (collision) {
+                    break;
+                }
             }
-        }
+        } catch (IndexOutOfBoundsException e) { }
 
         return collision;
     }
 
     public Block getCollisionBlock(Block block)
     {
-        for (int i = 0, j = blocks.size(); i < j; i++) {
-            if (blocks.get(i).detectCollision(block)) {
-                return blocks.get(i);
+        try {
+            for (int i = 0, j = blocks.size(); i < j; i++) {
+                if (blocks.get(i).detectCollision(block)) {
+                    return blocks.get(i);
+                }
             }
-        }
+        } catch (IndexOutOfBoundsException e) { }
 
         return null;
     }
