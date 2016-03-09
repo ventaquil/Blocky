@@ -12,5 +12,5 @@ then
 fi
 
 javac Blocky.java
-jar cfe "$path/Blocky.jar" Blocky *
+jar cfe "$path/Blocky.jar" Blocky *.class resources/*
 
