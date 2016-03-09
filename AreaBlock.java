@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
-import java.io.File;
 import java.io.IOException;
 
 public class AreaBlock extends Block {
@@ -17,7 +16,7 @@ public class AreaBlock extends Block {
         super(x, y, width, height);
 
         try {
-            image = ImageIO.read(new File("./resources/AreaBlock.png"));
+            image = ImageIO.read(AreaBlock.class.getResourceAsStream("/resources/AreaBlock.png"));
         } catch (IOException e) {
             System.exit(-1);
         }

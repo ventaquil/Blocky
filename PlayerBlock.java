@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
-import java.io.File;
 import java.io.IOException;
 
 import java.lang.Math;
@@ -39,7 +38,7 @@ public class PlayerBlock extends Block {
         super(x, y, width, height);
 
         try {
-            image = ImageIO.read(new File("./resources/PlayerBlock.png"));
+            image = ImageIO.read(PlayerBlock.class.getResourceAsStream("/resources/PlayerBlock.png"));
         } catch (IOException e) {
             System.exit(-1);
         }
