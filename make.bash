@@ -12,5 +12,9 @@ then
 fi
 
 javac Blocky.java
-jar cfe "$path/Blocky.jar" Blocky *.class resources/*
+jar cfe Blocky.jar Blocky *.class resources/*
 
+if [ "$path" != "." ]
+then
+    mv Blocky.jar "$path/Blocky.jar"
+fi
