@@ -12,4 +12,4 @@
 3. Some free time.
 
 ## Controls
-Use :arrow_left: :arrow_right: toove Your block left and right. Press :arrow_up: to jump.
+Use :arrow_left: :arrow_right: to move Your block left and right. Press :arrow_up: to jump.
