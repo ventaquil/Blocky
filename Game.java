@@ -50,7 +50,8 @@ public abstract class Game {
 
     private static Boolean checkEnd()
     {
-        return PlayerBlock.get().getY().intValue() >= GameFrame.get().getContentHeight();
+        return (PlayerBlock.get().getY().intValue() >= GameFrame.get().getContentHeight()) ||
+                PlayerBlock.checkEnd();
     }
 
     private static void executeActiveKeysActions()

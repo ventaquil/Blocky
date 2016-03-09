@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 
 public class AreaBlock extends Block {
-    private BufferedImage image;
+    protected BufferedImage image;
 
     public AreaBlock(Double x, Double y, Double width, Double height)
     {
@@ -25,5 +25,11 @@ public class AreaBlock extends Block {
     public void paint(Graphics2D g2D)
     {
         g2D.drawImage(image.getScaledInstance(10, 10, Image.SCALE_DEFAULT), getX().intValue(), getY().intValue(), null);
+    }
+
+    @Override
+    public String getName()
+    {
+        return "AreaBlock";
     }
 }

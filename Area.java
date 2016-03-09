@@ -13,6 +13,7 @@ public class Area {
                            height = 10;
     private static Area area = null;
     private List<AreaBlock> blocks;
+    private static final Integer notTouchBlocks = 85;
 
     public static void setSize(Integer width, Integer height)
     {
@@ -31,22 +32,28 @@ public class Area {
         return new Integer((new Random()).nextInt((max - min) + 1) + min);
     }
 
-    private AreaBlock randBlock()
+    private AreaBlock randBlock(Boolean notTouchBlock)
     {
         double x = (double) randInt(0, Area.width),
                y = (double) randInt(0, Area.height);
 
-        return new AreaBlock(x, y, 10., 10.);
+        if (notTouchBlock) {
+            return new NotTouchBlock(x, y, 10., 10.);
+        } else {
+            return new AreaBlock(x, y, 10., 10.);
+        }
     }
 
     private void randArea(Integer elements)
     {
         Double[] startValues = PlayerBlock.getStartValues();
-        Boolean collision;
+        Boolean collision, notTouchBlock;
         
         AreaBlock virtual = new AreaBlock(startValues[0], startValues[1], startValues[2], startValues[3]);
 
         for (int i = 0; i < elements; i++) {
+            notTouchBlock = randInt(0, 100) >= notTouchBlocks;
+
             do {
                 // Remove old element if exists
                 try {
@@ -55,7 +62,7 @@ public class Area {
 
                 collision = false;
 
-                blocks.add(randBlock());
+                blocks.add(randBlock(notTouchBlock));
 
                 // Find all conflicted blocks
                 for (int j = 0; (j < i) && !collision; j++) {
@@ -89,10 +96,12 @@ public class Area {
     {
         Integer elements = randInt((int) (0.01 * Area.width), (int) (0.015 * Area.width)) + randInt((int) (0.01 * Area.height), (int) (0.015 * Area.height));
         double x, y;
-        Boolean collision;
+        Boolean collision, notTouchBlock;
         AreaBlock block = null;
 
         for (int i = 0; i < elements; i++) {
+            notTouchBlock = randInt(0, 100) >= notTouchBlocks;
+
             do {
                 // Remove old element if exists
                 if (block != null) {
@@ -103,7 +112,11 @@ public class Area {
                 x = (double) randInt(-20, 20);
                 y = (double) randInt(0, Area.height);
 
-                block = new AreaBlock(x + offset + width, y, 10., 10.);
+                if (notTouchBlock) {
+                    block = new NotTouchBlock(x + offset + width, y, 10., 10.);
+                } else {
+                    block = new AreaBlock(x + offset + width, y, 10., 10.);
+                }
                 blocks.add(block);
 
                 // Find all conflicted blocks

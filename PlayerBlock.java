@@ -24,6 +24,12 @@ public class PlayerBlock extends Block {
     private Boolean jumping = false,
                     falling = false;
     private BufferedImage image;
+    private static Boolean end = false;
+
+    public static Boolean checkEnd()
+    {
+        return end;
+    }
 
     public static void setStart(Double x, Double y, Double width, Double height)
     {
@@ -51,6 +57,7 @@ public class PlayerBlock extends Block {
 
     public static void restart()
     {
+        end = false;
         start();
     }
 
@@ -132,7 +139,11 @@ public class PlayerBlock extends Block {
             } else {
                 Block collisionBlock = Area.get().getCollisionBlock(this);
 
-                y = -(collisionBlock.getY() - getHeight());
+                if (collisionBlock.getName() == "NotTouchBlock") {
+                    end = true;
+                } else {
+                    y = -(collisionBlock.getY() - getHeight());
+                }
 
                 jumpCounter = jumpModifier
                             = 0.;
@@ -158,12 +169,6 @@ public class PlayerBlock extends Block {
         x++;
         if (Area.get().check(this)) {
             x--;
-
-            Block collisionBlock = Area.get().getCollisionBlock(this);
-
-            if (collisionBlock != null) {
-                x = collisionBlock.getX();
-            }
         }
 
         Game.updateScore(x.intValue());
@@ -176,12 +181,6 @@ public class PlayerBlock extends Block {
         x--;
         if (Area.get().check(this) || (x < GameScreen.get().getOffset())) {
             x++;
-
-            Block collisionBlock = Area.get().getCollisionBlock(this);
-
-            if (collisionBlock != null) {
-                x = collisionBlock.getX() + collisionBlock.getWidth();
-            }
         }
 
         checkFall();
@@ -196,5 +195,11 @@ public class PlayerBlock extends Block {
         startPoint[3] = startHeight;
 
         return startPoint;
+    }
+
+    @Override
+    public String getName()
+    {
+        return "PlayerBlock";
     }
 }
