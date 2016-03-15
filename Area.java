@@ -49,7 +49,7 @@ public class Area {
         Double[] startValues = PlayerBlock.getStartValues();
         Boolean collision, notTouchBlock;
         
-        AreaBlock virtual = new AreaBlock(startValues[0], startValues[1], startValues[2], startValues[3]);
+        AreaBlock virtual = new AreaBlock(startValues[0], startValues[1], startValues[2] * 3., startValues[3] * 3.);
 
         for (int i = 0; i < elements; i++) {
             notTouchBlock = randInt(0, 100) >= notTouchBlocks;
