@@ -1,4 +1,14 @@
 #!/bin/bash
+if [ `ls -1 | grep class | wc -l` -gt 0 ]
+then
+    rm *.class
+fi
+
+if [ `ls -1 | grep jar | wc -l` -gt 0 ]
+then
+    rm *.jar
+fi
+
 if [ $# -gt 0 ]
 then
     path=$1
