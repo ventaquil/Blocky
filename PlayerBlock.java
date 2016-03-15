@@ -139,15 +139,14 @@ public class PlayerBlock extends Block {
             } else {
                 Block collisionBlock = Area.get().getCollisionBlock(this);
 
-                if (collisionBlock.getName() == "NotTouchBlock") {
-                    end = true;
-                } else {
-                    y = -(collisionBlock.getY() - getHeight());
-                }
+                y = -(collisionBlock.getY() - getHeight());
 
                 jumpCounter = jumpModifier
                             = 0.;
 
+                if (collisionBlock.getName() == "NotTouchBlock") {
+                    end = true;
+                }
                 falling = false;
             }
         }
