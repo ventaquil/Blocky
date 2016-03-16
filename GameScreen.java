@@ -13,7 +13,8 @@ public class GameScreen extends JPanel {
     private static Integer width, height, fps = null;
     private static GameScreen screen;
     private Double offset = 0.;
-    private Short screenNo = 1; // 1 - game; 2 - end
+    private Short screenNo = 0, // 0 - menu; 1 - choose difficult level; 2 - game; 3 - end
+                  activeMenuNo = 0;
 
     private GameScreen()
     {
@@ -72,6 +73,9 @@ public class GameScreen extends JPanel {
     {
         Graphics2D g2D = (Graphics2D) g;
 
+        FontMetrics fm;
+        Rectangle2D r;
+
         // Clear all scene
         g2D.clearRect(0, 0, getWidth(), getHeight());
 
@@ -80,7 +84,31 @@ public class GameScreen extends JPanel {
         g2D.fillRect(0, 0, getWidth(), getHeight());
 
         switch (screenNo) {
-            case 1:
+            case 0:
+                Short posN = 2;
+                Integer space = (getHeight() - (posN * 14)) / 3,
+                        helper;
+
+                g2D.setColor(Color.WHITE);
+                g2D.setFont(new Font("Arial", Font.BOLD, 14));
+                fm = g2D.getFontMetrics();
+
+                r = fm.getStringBounds("Start", g2D);
+                helper = (getWidth() - (int) r.getWidth()) / 2;
+                g2D.drawString("Start", helper, space);
+                if (activeMenuNo == 0) {
+                    g2D.draw(new Line2D.Double(helper - 2, space + 2, helper + (int) r.getWidth() + 2, space + 2));
+                }
+
+                r = fm.getStringBounds("Exit", g2D);
+                helper = (getWidth() - (int) r.getWidth()) / 2;
+                space = 2 * space + 14;
+                g2D.drawString("Exit", helper, space);
+                if (activeMenuNo == 1) {
+                    g2D.draw(new Line2D.Double(helper - 2, space + 2, helper + (int) r.getWidth() + 2, space + 2));
+                }
+                break;
+            case 2:
                 g2D.translate(-offset, 23);
                 Area area = Area.get();
                 if (area != null) {
@@ -92,13 +120,11 @@ public class GameScreen extends JPanel {
 
                 printOverlay(g2D);
                 break;
-            case 2:
-                FontMetrics fm;
-                Rectangle2D r;
+            case 3:
                 g2D.setColor(Color.WHITE);
 
                 String score = "Your final score " + Game.getScore();
-                g2D.setFont(new Font("Arial", Font.BOLD, 28));
+                g2D.setFont(new Font("Arial", Font.BOLD, 22));
                 fm = g2D.getFontMetrics();
                 r = fm.getStringBounds(score, g2D);
                 int topOffset = (getHeight() - (int) r.getHeight()) / 2;
@@ -109,7 +135,6 @@ public class GameScreen extends JPanel {
                 r = fm.getStringBounds("Press [ENTER] to restart", g2D);
                 g2D.drawString("Press [ENTER] to restart", (getWidth() - (int) r.getWidth()) / 2, topOffset + 28);
 
-                fm = g2D.getFontMetrics();
                 r = fm.getStringBounds("or [ESC] to exit", g2D);
                 g2D.drawString("or [ESC] to exit", (getWidth() - (int) r.getWidth()) / 2, topOffset + 28 + 14);
                 break;
@@ -145,12 +170,57 @@ public class GameScreen extends JPanel {
 
     public void showEndScreen()
     {
-        screenNo = 2;
+        offset = 0.;
+        screenNo = 3;
+        activeMenuNo = 0;
     }
 
     public void restart()
     {
         offset = 0.;
-        screenNo = 1;
+        screenNo = 2;
+        activeMenuNo = 0;
+    }
+
+    public Short getScreenNo()
+    {
+        return screenNo;
+    }
+
+    public void menuUp()
+    {
+        activeMenuNo++;
+
+        if (activeMenuNo > 1) {
+            activeMenuNo = 0;
+        }
+    }
+
+    public void menuDown()
+    {
+        activeMenuNo--;
+
+        if (activeMenuNo < 0) {
+            activeMenuNo = 1;
+        }
+    }
+
+    public void executeActiveMenuElementAction()
+    {
+        switch (activeMenuNo) {
+            case 0:
+                screenNo = 2;
+                break;
+            case 1:
+                System.exit(0);
+                break;
+        }
+    }
+
+    public void goToMenu()
+    {
+        offset = 0.;
+        screenNo = 0;
+        activeMenuNo = 0;
     }
 }

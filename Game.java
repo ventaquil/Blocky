@@ -48,10 +48,25 @@ public abstract class Game {
         score = 0;
     }
 
+    private static Boolean checkGame()
+    {
+        return GameScreen.get().getScreenNo() == 2;
+    }
+
+    private static Boolean checkEndScreen()
+    {
+        return GameScreen.get().getScreenNo() == 3;
+    }
+
     private static Boolean checkEnd()
     {
         return (PlayerBlock.get().getY().intValue() >= GameFrame.get().getContentHeight()) ||
                 PlayerBlock.checkEnd();
+    }
+
+    private static Boolean checkMenu()
+    {
+        return GameScreen.get().getScreenNo() == 0;
     }
 
     private static void executeActiveKeysActions()
@@ -60,27 +75,33 @@ public abstract class Game {
             try {
                 switch (activeKeys.get(i)) {
                     case 10: // ENTER
-                        if (checkEnd()) {
+                        if (checkMenu()) {
+                            GameScreen.get().executeActiveMenuElementAction();
+                        } else if (checkEndScreen()) {
                             restart();
                         }
                         break;
                     case 27: // ESC
-                        System.exit(0);
+                        if (checkEndScreen()) {
+                            GameScreen.get().goToMenu();
+                        }
                         break;
                     case 37: // Arrow Left
-                        if (!checkEnd()) {
+                        if (checkGame()) {
                             PlayerBlock.get()
                                        .decreaseX();
                         }
                         break;
                     case 38: // Arrow Up
-                        if (!checkEnd()) {
+                        if (checkMenu()) {
+                            GameScreen.get().menuUp();
+                        } else if (checkGame()) {
                             PlayerBlock.get()
                                        .jump();
                         }
                         break;
                     case 39: // Arrow Right
-                        if (!checkEnd()) {
+                        if (checkGame()) {
                             PlayerBlock.get()
                                        .increaseX();
 
@@ -90,20 +111,20 @@ public abstract class Game {
                         }
                         break;
                     case 40: // Arrow Down
-                        if (!checkEnd()) {
+                        if (checkMenu()) {
+                            GameScreen.get().menuDown();
+                        } else if (checkGame()) {
                             PlayerBlock.get()
                                        .checkFall();
                         }
                         break;
                     case 82: // r
-                        if (!checkEnd()) {
+                        if (checkGame()) {
                             restart();
                         }
                         break;
                 }
-            } catch(IndexOutOfBoundsException e) {
-                
-            }
+            } catch(IndexOutOfBoundsException e) { }
         }
     }
 
@@ -116,7 +137,11 @@ public abstract class Game {
             microtime = System.currentTimeMillis();
 
             try {
-                Thread.sleep(new Long(1000 / 100));
+                if (checkMenu()) {
+                    Thread.sleep(new Long(100)); // Wait 100ms
+                } else {
+                    Thread.sleep(new Long(10)); // Wait 10ms
+                }
 
                 // Count FPS
                 temp = new Long(microtime / 1000);
@@ -133,10 +158,10 @@ public abstract class Game {
                 executeActiveKeysActions();
 
                 // Check end condiction
-                if (checkEnd()) {
+                if (!checkEndScreen() && checkEnd() && !checkMenu()) {
                     GameScreen.get()
                               .showEndScreen();
-                } else {
+                } else if (checkGame()) {
                     // Block move actions
                     PlayerBlock.get()
                                .jumping();
