@@ -1,10 +1,6 @@
 public class Block {
     protected Double x, y, width, height;
 
-    public String getName()
-    {
-        return "Block";
-    }
 
     public Block(Double x, Double y, Double width, Double height)
     {

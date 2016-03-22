@@ -9,7 +9,8 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 
 public class AreaBlock extends Block {
-    protected BufferedImage image;
+    private BufferedImage image;
+    private static Boolean setIcons = true;
 
     public AreaBlock(Double x, Double y, Double width, Double height)
     {
@@ -18,18 +19,27 @@ public class AreaBlock extends Block {
         try {
             image = ImageIO.read(AreaBlock.class.getResourceAsStream("/resources/AreaBlock.png"));
         } catch (IOException e) {
-            System.exit(-1);
+            setIcons = false;
         }
     }
 
-    public void paint(Graphics2D g2D)
+    public void paintBlock(Graphics2D g2D)
     {
-        g2D.drawImage(image.getScaledInstance(10, 10, Image.SCALE_DEFAULT), getX().intValue(), getY().intValue(), null);
+        if (setIcons) {
+            g2D.drawImage(image.getScaledInstance(width.intValue(), height.intValue(), Image.SCALE_DEFAULT), getX().intValue(), getY().intValue(), null);
+        } else {
+            Rectangle2D rectangle = new Rectangle2D.Double(getX().intValue(), getY().intValue(), width.intValue(), height.intValue());
+
+            g2D.setColor(new Color(100, 0, 143));
+            g2D.fill(rectangle);
+
+            g2D.setColor(new Color(0, 0, 0, 0));
+            g2D.draw(rectangle);
+        }
     }
 
-    @Override
-    public String getName()
+    public static void setIcons(Boolean status)
     {
-        return "AreaBlock";
+        setIcons = status;
     }
 }

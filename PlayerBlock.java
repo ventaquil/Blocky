@@ -11,32 +11,38 @@ import java.io.IOException;
 import java.lang.Math;
 
 public class PlayerBlock extends Block {
-    private static final Double STARTFALLING = Math.sqrt(30);
-    private static PlayerBlock block = null;
-    private static Double startX = 0.,
-                          startY = 0.,
-                          startWidth = 0.,
-                          startHeight = 0.;
-    private Double x = startX,
-                   y = startY,
-                   jumpModifier = 0.,
-                   jumpCounter = null;
+    private static PlayerBlock instance;
+    private static Integer blockWidth,
+                           blockHeight;
+    private static Double blockX = 0.,
+                          blockY = 0.;
+    private BufferedImage image;
+    private static Boolean setIcons = true;
     private Boolean jumping = false,
                     falling = false;
-    private BufferedImage image;
-    private static Boolean end = false;
+    private Double moveCounter,
+                   moveModifier;
 
-    public static Boolean checkEnd()
+    @Override
+    public Double getY()
     {
-        return end;
+        if (moveModifier == null) {
+            return y;
+        }
+
+        return y + moveModifier;
     }
 
-    public static void setStart(Double x, Double y, Double width, Double height)
+    public static void setBlockSize(Integer width, Integer height)
     {
-        startX = x;
-        startY = y;
-        startWidth = width;
-        startHeight = height;
+        blockWidth = width;
+        blockHeight = height;
+    }
+
+    public static void setStartPosition(Double x, Double y)
+    {
+        blockX = x;
+        blockY = y;
     }
 
     private PlayerBlock(Double x, Double y, Double width, Double height)
@@ -46,81 +52,73 @@ public class PlayerBlock extends Block {
         try {
             image = ImageIO.read(PlayerBlock.class.getResourceAsStream("/resources/PlayerBlock.png"));
         } catch (IOException e) {
-            System.exit(-1);
+            setIcons = false;
         }
     }
 
-    public static void start()
+    public static void create()
     {
-        block = new PlayerBlock(startX, startY, startWidth, startHeight);
+        instance = new PlayerBlock(blockX, blockY, new Double(blockWidth), new Double(blockHeight));
     }
 
-    public static void restart()
+    private void paintBlock(Graphics2D g2D)
     {
-        end = false;
-        start();
-    }
+        if (setIcons) {
+            g2D.drawImage(image.getScaledInstance(width.intValue(), height.intValue(), Image.SCALE_DEFAULT), getX().intValue(), getY().intValue(), null);
+        } else {
+            Rectangle2D rectangle = new Rectangle2D.Double(getX().intValue(), getY().intValue(), width.intValue(), height.intValue());
 
-    public static PlayerBlock get()
-    {
-        return block;
-    }
+            g2D.setColor(new Color(255, 109, 0));
+            g2D.fill(rectangle);
 
-    @Override
-    public Double getX()
-    {
-        return x;
-    }
-
-    @Override
-    public Double getY()
-    {
-        return -(y + jumpModifier);
-    }
-
-    public void paint(Graphics2D g2D)
-    {
-        g2D.drawImage(image.getScaledInstance(10, 10, Image.SCALE_DEFAULT), getX().intValue(), getY().intValue(), null);
-    }
-
-    public void jump()
-    {
-        if (!jumping && !falling) {
-            jumping = true;
-            jumpCounter = 0.001;
+            g2D.setColor(new Color(0, 0, 0, 0));
+            g2D.draw(rectangle);
         }
     }
 
-    public void fall()
+    public static void paint(Graphics2D g2D)
     {
-        if (!jumping && !falling) {
-            falling = true;
-            jumpCounter = 0.001;
+        instance.paintBlock(g2D);
+    }
+
+    public static void jump()
+    {
+        if (!instance.jumping && !instance.falling) {
+            instance.jumping = true;
+            instance.moveCounter = 0.001;
         }
     }
 
-    public void jumping()
+    public static void fall()
+    {
+        if (!instance.jumping && !instance.falling) {
+            instance.falling = true;
+            instance.moveCounter = 0.001;
+        }
+    }
+
+    private void jumping()
     {
         if (jumping) {
-            jumpModifier = -Math.pow(jumpCounter - Math.sqrt(30), 2) + 30.;
+            moveModifier = Math.pow(moveCounter - Math.sqrt(100), 2) - 100.;
 
             if (
-                (getY() > 0) &&
-                (jumpCounter < STARTFALLING) &&
-                !Area.get().check(this)
+                (getY() > 0.) &&
+                (moveCounter < Math.sqrt(100)) &&
+                !Area.check(this)
             ) {
-                jumpCounter += 0.1;
+                moveCounter += 0.2;
             } else {
-                Block collisionBlock = Area.get().getCollisionBlock(this);
+                Block collisionBlock = Area.getCollisionBlock(this);
 
-                if (collisionBlock != null) {
-                    y = -(collisionBlock.getY() + collisionBlock.getHeight());
+                if (collisionBlock == null) {
+                    y += moveModifier;
                 } else {
-                    y += jumpModifier;
+                    y = collisionBlock.getY() +  collisionBlock.getHeight();
                 }
 
-                jumpCounter = jumpModifier
-                            = 0.;
+                moveCounter = moveModifier
+                            = null;
 
                 jumping = false;
 
@@ -129,76 +127,87 @@ public class PlayerBlock extends Block {
         }
     }
 
-    public void falling()
+    private void falling()
     {
         if (falling) {
-            jumpModifier = -Math.pow(jumpCounter, 2);
+            moveModifier = Math.pow(moveCounter, 2);
 
-            if (!Area.get().check(this)) {
-                jumpCounter += 0.1;
+            if (!Area.check(this)) {
+                moveCounter += 0.2;
             } else {
-                Block collisionBlock = Area.get().getCollisionBlock(this);
+                Block collisionBlock = Area.getCollisionBlock(this);
 
-                y = -(collisionBlock.getY() - getHeight());
+                y = collisionBlock.getY() - getHeight();
 
-                jumpCounter = jumpModifier
+                moveCounter = moveModifier
                             = 0.;
 
-                if (collisionBlock.getName() == "NotTouchBlock") {
-                    end = true;
-                }
+//                 if (collisionBlock instanceof NotTouchBlock) {
+//                     Game.finish();
+//                 }
+
                 falling = false;
+            }
+
+            if (getY() > Area.getHeight()) {
+                Game.finish();
             }
         }
     }
 
-    public void checkFall()
+    private void checkFall()
     {
         if (!jumping && !falling) {
             y--;
-            if (!Area.get().check(this)) {
+
+            if (!Area.check(this)) {
                 fall();
             }
+
             y++;
         }
     }
 
-    public void increaseX()
+    public static void move()
     {
-        x++;
-        if (Area.get().check(this)) {
-            x--;
+        if (instance != null) {
+            instance.jumping();
+            instance.falling();
         }
-
-        Game.updateScore(x.intValue());
-
-        checkFall();
     }
 
-    public void decreaseX()
+    public static void increaseX()
     {
-        x--;
-        if (Area.get().check(this) || (x < GameScreen.get().getOffset())) {
-            x++;
+        if (instance != null) {
+            instance.x += 1.7;
+
+            if (Area.check(instance)) {
+                instance.x -= 1.7;
+            } else {
+                Game.updateScore(instance.x.intValue());
+
+                GamePanel.increaseOffset(instance.x);
+            }
+
+            instance.checkFall();
         }
-
-        checkFall();
     }
 
-    public static Double[] getStartValues()
+    public static void decreaseX()
     {
-        Double[] startPoint = new Double[4];
-        startPoint[0] = startX;
-        startPoint[1] = startY;
-        startPoint[2] = startWidth;
-        startPoint[3] = startHeight;
+        if (instance != null) {
+            instance.x -= 1.7;
 
-        return startPoint;
+            if (Area.check(instance) || (GamePanel.getOffset() >= instance.x.intValue())) {
+                instance.x += 1.7;
+            }
+
+            instance.checkFall();
+        }
     }
 
-    @Override
-    public String getName()
+    public static void setIcons(Boolean status)
     {
-        return "PlayerBlock";
+        setIcons = status;
     }
 }
