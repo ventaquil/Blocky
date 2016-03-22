@@ -28,3 +28,5 @@ if [ "$path" != "." ]
 then
     mv Blocky.jar "$path/Blocky.jar"
 fi
+
+rm *.class
