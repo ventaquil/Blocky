@@ -50,12 +50,6 @@ public class Game {
         restart();
     }
 
-    public static void setIcons(Boolean status)
-    {
-        AreaBlock.setIcons(status);
-        PlayerBlock.setIcons(status);
-    }
-
     public static void restart()
     {
         instance = null;

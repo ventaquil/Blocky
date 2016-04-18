@@ -99,7 +99,6 @@ abstract public class Blocky {
 
         BlockyFrame.create(MainMenuPanel.instance());
 
-        OptionsMenuPanel.create(600, 300);
         DifficultLevelMenuPanel.create(600, 300);
         GamePanel.create(600, 300);
 
@@ -114,11 +113,6 @@ abstract public class Blocky {
     public static void changeToMainMenu()
     {
         BlockyFrame.changePaneContent(MainMenuPanel.instance());
-    }
-
-    public static void changeToOptionsMenu()
-    {
-        BlockyFrame.changePaneContent(OptionsMenuPanel.instance());
     }
 
     public static void changeToDifficultLevelMenu()

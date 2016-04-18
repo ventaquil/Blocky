@@ -17,7 +17,6 @@ public class PlayerBlock extends Block {
     private static Double blockX = 0.,
                           blockY = 0.;
     private BufferedImage image;
-    private static Boolean setIcons = true;
     private Boolean jumping = false,
                     falling = false;
     private Double moveCounter,
@@ -52,7 +51,7 @@ public class PlayerBlock extends Block {
         try {
             image = ImageIO.read(PlayerBlock.class.getResourceAsStream("/resources/PlayerBlock.png"));
         } catch (IOException e) {
-            setIcons = false;
+            System.exit(-1);
         }
     }
 
@@ -63,17 +62,7 @@ public class PlayerBlock extends Block {
 
     private void paintBlock(Graphics2D g2D)
     {
-        if (setIcons) {
-            g2D.drawImage(image.getScaledInstance(width.intValue(), height.intValue(), Image.SCALE_DEFAULT), getX().intValue(), getY().intValue(), null);
-        } else {
-            Rectangle2D rectangle = new Rectangle2D.Double(getX().intValue(), getY().intValue(), width.intValue(), height.intValue());
-
-            g2D.setColor(new Color(255, 109, 0));
-            g2D.fill(rectangle);
-
-            g2D.setColor(new Color(0, 0, 0, 0));
-            g2D.draw(rectangle);
-        }
+        g2D.drawImage(image.getScaledInstance(width.intValue(), height.intValue(), Image.SCALE_DEFAULT), getX().intValue(), getY().intValue(), null);
     }
 
     public static void paint(Graphics2D g2D)
@@ -204,10 +193,5 @@ public class PlayerBlock extends Block {
 
             instance.checkFall();
         }
-    }
-
-    public static void setIcons(Boolean status)
-    {
-        setIcons = status;
     }
 }

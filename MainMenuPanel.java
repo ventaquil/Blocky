@@ -100,27 +100,6 @@ public class MainMenuPanel extends JPanel {
 
         instance.add(Box.createVerticalGlue());
 
-        instance.add(addButton("Options", new MouseListener() {
-            @Override
-            public void mouseReleased(MouseEvent e) { }
-
-            @Override
-            public void mousePressed(MouseEvent e) { }
-
-            @Override
-            public void mouseExited(MouseEvent e) { }
-
-            @Override
-            public void mouseEntered(MouseEvent e) { }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Blocky.changeToOptionsMenu();
-            }
-        }));
-
-        instance.add(Box.createVerticalGlue());
-
         instance.add(addButton("Exit", new MouseListener() {
             @Override
             public void mouseReleased(MouseEvent e) { }
