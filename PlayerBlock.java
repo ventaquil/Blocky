@@ -171,7 +171,12 @@ public class PlayerBlock extends Block {
             instance.x += 1.7;
 
             if (Area.check(instance)) {
-                instance.x -= 1.7;
+                Block collisionBlock = Area.getCollisionBlock(instance);
+                if (collisionBlock != null) {
+                    instance.x = collisionBlock.getX() - instance.width;
+                } else {
+                    instance.x -= 1.7;
+                }
             } else {
                 Game.updateScore(instance.x.intValue());
 
@@ -188,7 +193,12 @@ public class PlayerBlock extends Block {
             instance.x -= 1.7;
 
             if (Area.check(instance) || (GamePanel.getOffset() >= instance.x.intValue())) {
-                instance.x += 1.7;
+                Block collisionBlock = Area.getCollisionBlock(instance);
+                if (collisionBlock != null) {
+                    instance.x = collisionBlock.getX() + collisionBlock.getWidth();
+                } else {
+                    instance.x += 1.7;
+                }
             }
 
             instance.checkFall();
