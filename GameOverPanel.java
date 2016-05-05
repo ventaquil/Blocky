@@ -5,9 +5,10 @@ import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
-public class MainMenuPanel extends CustomPanel {
-    private static MainMenuPanel instance = null;
+public class GameOverPanel extends CustomPanel {
+    private static GameOverPanel instance = null;
 
     private void addButton(String text, MouseListener listener)
     {
@@ -23,7 +24,12 @@ public class MainMenuPanel extends CustomPanel {
     {
         add(Box.createVerticalGlue());
 
-        addButton("Start Game", new MouseListener() {
+        addLabel("Your Score " + Game.instance()
+                                     .getScore());
+
+        add(Box.createVerticalGlue());
+
+        addButton("Retry", new MouseListener() {
             @Override
             public void mouseReleased(MouseEvent e) { }
 
@@ -48,7 +54,7 @@ public class MainMenuPanel extends CustomPanel {
 
         add(Box.createVerticalGlue());
 
-        addButton("Choose Difficult Level", new MouseListener() {
+        addButton("Main Menu", new MouseListener() {
             @Override
             public void mouseReleased(MouseEvent e) { }
 
@@ -64,7 +70,7 @@ public class MainMenuPanel extends CustomPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 BlockyFrame.instance()
-                           .changePanel(ChangeDifficultLevelPanel.instance());
+                           .changePanel(MainMenuPanel.instance());
             }
         });
 
@@ -92,10 +98,22 @@ public class MainMenuPanel extends CustomPanel {
         add(Box.createVerticalGlue());
     }
 
+    private void addLabel(String text)
+    {
+        JLabel label = new JLabel(text, JLabel.CENTER);
+        label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+
+        add(label);
+    }
+
     public void executeKeysActions(List<Integer> activeKeys)
     {
         for (int i = 0; i < activeKeys.size(); i++) {
             switch(activeKeys.get(i)) {
+                case 8: // Backspace
+                    BlockyFrame.instance()
+                               .changePanel(MainMenuPanel.instance());
+                    break;
                 case 27: // ESC
                     System.exit(0);
                     break;
@@ -103,16 +121,7 @@ public class MainMenuPanel extends CustomPanel {
         }
     }
 
-    public static MainMenuPanel instance()
-    {
-        if (instance == null) {
-            instance = new MainMenuPanel();
-        }
-
-        return instance;
-    }
-
-    private MainMenuPanel()
+    private GameOverPanel()
     {
         super();
 
@@ -126,4 +135,23 @@ public class MainMenuPanel extends CustomPanel {
 
         addButtons();
     }
+
+    public static GameOverPanel instance()
+    {
+        if (instance == null) {
+            instance = new GameOverPanel();
+        }
+
+        instance.refreshJLabel();
+
+        return instance;
+    }
+
+    private void refreshJLabel()
+    {
+        JLabel label = (JLabel) getComponent(1);
+        label.setText("Your Score " + Game.instance()
+                                          .getScore());
+    }
 };
+

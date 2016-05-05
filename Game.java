@@ -1,58 +1,131 @@
-public class Game {
-    private static Game instance;
-    private static int difficultLevel = 0; // 0 - easy, 1 - normal, 2 - hard
-    private Integer score = 0;
+import java.awt.Dimension;
 
-    public static void changeDifficultLevel(int level)
+public class Game {
+    private static Game instance = null;
+    public static final int EASY = 0,
+                            NORMAL = 1,
+                            HARD = 2;
+    private static int difficultLevel = NORMAL;
+    private Boolean started = false,
+                    ended = false;
+    private Integer score = 0;
+    private Area area;
+
+    public static void changeLevel(int level)
     {
-        if (level >= 0 && level <= 2) {
+        if ((level == EASY) || (level == NORMAL) || (level == HARD)) {
             difficultLevel = level;
+        } else {
+            // @TODO exception
         }
+    }
+
+    public void finish()
+    {
+        ended = true;
+
+        BlockyFrame.instance()
+                   .changePanel(GameOverPanel.instance());
     }
 
     private Game()
     {
-        PlayerBlock.create();
-
-        Area.create();
+        area = Area.instance()
+                   .setSize(new Dimension(650, 277))
+                   .randObjects();
     }
 
-    public static void run()
+    public static Integer getLevel()
     {
-        if (instance != null) {
-            restart();
-        }
-
-        instance = new Game();
+        return difficultLevel;
     }
 
-    public static Integer getScore()
+    public static String getLevelString()
     {
-        return instance.score;
-    }
-
-    public static Boolean ifStarted()
-    {
-        return instance != null;
-    }
-
-    public static void updateScore(Integer newX)
-    {
-        if (newX > instance.score) {
-            instance.score = newX;
+        switch (difficultLevel) {
+            case EASY:
+                return "EASY";
+            case NORMAL:
+                return "NORMAL";
+            case HARD:
+                return "HARD";
+            default:
+                return "UNDEFINED";
         }
     }
 
-    public static void finish()
+    public Integer getScore()
     {
-        Blocky.changeToGameOverMenu();
+        return score;
+    }
 
-        restart();
+    public static Game instance()
+    {
+        if (instance == null) {
+            instance = new Game();
+        }
+
+        return instance;
+    }
+
+    public Boolean isStarted()
+    {
+        return started && !ended;
+    }
+
+    public void loopAction()
+    {
+        if (isStarted()) {
+            PlayerBlock.instance()
+                       .move();
+
+            Area.instance()
+                .removeOld()
+                .randNew();
+
+            if (difficultLevel == HARD) {
+                GamePanel panel = GamePanel.instance();
+
+                panel.increaseOffset();
+
+                PlayerBlock playerBlock = PlayerBlock.instance();
+
+                if (playerBlock.getX() + playerBlock.getWidth() <= panel.getOffset()) {
+                    finish();
+                }
+            }
+        }
     }
 
     public static void restart()
     {
-        instance = null;
-        System.gc();
+        instance = new Game();
+
+        PlayerBlock.restart();
+
+        GamePanel.instance()
+                 .restart();
     }
-}
+
+    public void start()
+    {
+        if (ended) {
+            restart();
+
+            System.gc();
+
+            instance.start();
+        } else {
+            PlayerBlock.instance()
+                       .fall();
+            started = true;
+        }
+    }
+
+    public void updateScore(Integer newScore)
+    {
+        if (newScore > score) {
+            score = newScore;
+        }
+    }
+};

@@ -5,10 +5,20 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class AreaBlock extends MapBlock {
+public class NotTouchBlock extends AreaBlock {
     protected static BufferedImage image;
 
-    public AreaBlock(Dimension coordinates, Dimension size)
+    @Override
+    public void collisionEvent(MapObject object)
+    {
+        Game gameInstance = Game.instance();
+
+        if (gameInstance.isStarted() && (object instanceof PlayerBlock)) {
+            gameInstance.finish();
+        }
+    }
+
+    public NotTouchBlock(Dimension coordinates, Dimension size)
     {
         super(coordinates, size);
     }
@@ -22,7 +32,7 @@ public class AreaBlock extends MapBlock {
     public static void setImage()
     {
         try {
-            image = ImageIO.read(AreaBlock.class.getResourceAsStream("/resources/AreaBlock.png"));
+            image = ImageIO.read(NotTouchBlock.class.getResourceAsStream("/resources/NotTouchBlock.png"));
         } catch (IOException e) {
             System.exit(-1);
         }
