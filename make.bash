@@ -29,6 +29,9 @@ javac Blocky.java
 echo "> jar cfe Blocky.jar Blocky *.class resources/*"
 jar cfe Blocky.jar Blocky *.class resources/*
 
+echo "> chmod +x Blocky.jar"
+chmod +x Blocky.jar
+
 if [ "$path" != "." ]
 then
     echo "> mv Blocky.jar \"$path/Blocky.jar\""
