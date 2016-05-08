@@ -94,12 +94,16 @@ public class Area {
 
     public Area randObjects()
     {
+        if (map != null) {
+            return this;
+        }
+
         lastGenerated = 0;
 
         Boolean collision,
                 notTouchBlocks = Game.getLevel() >= Game.NORMAL;
 
-        MapBlock virtualBlock = new MapBlock(new Dimension(0, 0), new Dimension(40, 60));
+        MapBlock virtualBlock = new MapBlock(new Dimension(0, 0), new Dimension(95, 95));
 
         Integer blocksCount = randomInt(22, 27);
 
