@@ -1,4 +1,5 @@
 import java.awt.Dimension;
+import java.util.concurrent.Semaphore;
 
 public class Game {
     private static Game instance = null;
@@ -10,6 +11,7 @@ public class Game {
                     ended = false;
     private Integer score = 0;
     private Area area;
+    private static Semaphore areaSemaphore = new Semaphore(1, true);
 
     public static void changeLevel(int level)
     {
@@ -26,15 +28,20 @@ public class Game {
 
         area = null;
 
+        areaSemaphore.release();
+
         BlockyFrame.instance()
                    .changePanel(GameOverPanel.instance());
     }
 
     private Game()
     {
-        area = Area.instance()
-                   .setSize(new Dimension(650, 277))
-                   .randObjects();
+        area = Area.instance();
+
+        if (areaSemaphore.tryAcquire()) {
+            area.setSize(new Dimension(650, 277))
+                .randObjects();
+        }
     }
 
     public static Integer getLevel()
