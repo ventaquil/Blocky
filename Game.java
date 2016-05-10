@@ -24,6 +24,8 @@ public class Game {
     {
         ended = true;
 
+        area = null;
+
         BlockyFrame.instance()
                    .changePanel(GameOverPanel.instance());
     }
@@ -66,6 +68,11 @@ public class Game {
         }
 
         return instance;
+    }
+
+    public Boolean isEnded()
+    {
+        return !isStarted();
     }
 
     public Boolean isStarted()

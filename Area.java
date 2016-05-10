@@ -94,10 +94,6 @@ public class Area {
 
     public Area randObjects()
     {
-        if (map != null) {
-            return this;
-        }
-
         lastGenerated = 0;
 
         Boolean collision,
@@ -169,6 +165,8 @@ public class Area {
         // @TODO exceptions
         width = size.width;
         height = size.height;
+
+        map = null;
 
         return this;
     }
