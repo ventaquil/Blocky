@@ -56,8 +56,12 @@ chmod +x Blocky.jar
 
 if [ "$path" != "." ]
 then
-    write "> mv Blocky.jar \"$path/Blocky.jar\""
+    realpath=`realpath -s "$path/"`
+
+    write "> mv Blocky.jar $realpath/Blocky.jar"
     mv Blocky.jar "$path/Blocky.jar"
+else
+    realpath=$path
 fi
 
 write "> rm *.class"
@@ -65,6 +69,6 @@ rm *.class
 
 if $execute
 then
-    write "> java -jar \"$path/Blocky.jar\""
+    write "> java -jar $realpath/Blocky.jar"
     java -jar "$path/Blocky.jar"
 fi
