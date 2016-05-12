@@ -11,7 +11,7 @@ import java.util.List;
 
 public class GamePanel extends CustomPanel {
     private static GamePanel instance = null;
-    private Integer offset = 0;
+    private Integer offset;
 
     public void executeKeysActions(List<Integer> activeKeys)
     {
@@ -57,6 +57,8 @@ public class GamePanel extends CustomPanel {
         setMaximumSize(new Dimension(600, 300));
 
         setPreferredSize(new Dimension(600, 300));
+
+        restart();
     }
 
     public Integer getOffset()
@@ -123,6 +125,10 @@ public class GamePanel extends CustomPanel {
 
     public void restart()
     {
-        offset = 0;
+        if (Game.getLevel() == Game.HARD) {
+            offset = -50;
+        } else {
+            offset = 0;
+        }
     }
 };
