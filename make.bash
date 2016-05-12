@@ -2,6 +2,7 @@
 
 verbose=false
 execute=false
+nextIsPath=false
 
 function write {
     if $verbose
@@ -16,16 +17,43 @@ if [ $# -gt 0 ]
 then
     for (( i=1; $i<=$#; i=$i+1 ))
     do
-        if [ "${!i}" == "-v" ]
+        if $nextIsPath
         then
-            verbose=true
-        elif [ "${!i}" == "-e" ]
-        then
-            execute=true
-        else
             path=${!i}
+            nextIsPath=false
+        else
+            if [ "${!i}" == "-v" ]
+            then
+                verbose=true
+            elif [ "${!i}" == "-e" ]
+            then
+                execute=true
+            elif [ "${!i}" == "-p" ]
+            then
+                nextIsPath=true
+            elif [ "${!i}" == "-c" ]
+            then
+                clear
+            elif [ "${!i}" == "-h" ]
+            then
+                echo "Blocky make bash script"
+                echo "  -c clear screen"
+                echo "  -v show executed commands"
+                echo "  -e run game after compile"
+                echo "  -p {PATH} set path where JAR will be moved"
+                exit
+            else
+                echo "Unknow parameter ${!i}"
+                exit;
+            fi
         fi
     done
+fi
+
+if $nextIsPath
+then
+    echo "You must send path with -p argument"
+    exit
 fi
 
 if [ `ls -1 | grep class | wc -l` -gt 0 ]

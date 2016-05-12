@@ -13,3 +13,10 @@
 
 ## Controls
 Use :arrow_left: :arrow_right: to move Your block left and right. Press :arrow_up: to jump.
+
+## Bash script options
+* `-c` clear screen
+* `-v` show executed commands
+* `-e` run game after compile
+* `-p {PATH}` set path where JAR will be moved
+* `-h` small help
