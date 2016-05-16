@@ -17,6 +17,10 @@ public class Game {
     {
         if ((level == EASY) || (level == NORMAL) || (level == HARD)) {
             difficultLevel = level;
+
+            Area.instance()
+                .setSize(new Dimension(650, 277))
+                .randObjects();
         } else {
             // @TODO exception
         }
@@ -36,10 +40,9 @@ public class Game {
 
     private Game()
     {
-        area = Area.instance();
-
         if (areaSemaphore.tryAcquire()) {
-            area.setSize(new Dimension(650, 277))
+            Area.instance()
+                .setSize(new Dimension(650, 277))
                 .randObjects();
         }
     }
