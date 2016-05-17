@@ -76,8 +76,8 @@ fi
 write "> javac Blocky.java"
 javac Blocky.java
 
-write "> jar cfe Blocky.jar Blocky *.class resources/*"
-jar cfe Blocky.jar Blocky *.class resources/*
+write "> jar cfm Blocky.jar Manifest.txt *.class drivers/* resources/* sqlite/*"
+jar cfm Blocky.jar Manifest.txt *.class drivers/* resources/* sqlite/*
 
 write "> chmod +x Blocky.jar"
 chmod +x Blocky.jar
